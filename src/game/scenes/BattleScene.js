@@ -1,8 +1,11 @@
 import { Scene } from 'engine/Scene.js';
+import { LevelMap } from 'game/entities/LevelMap.js';
 
 export class BattleScene extends Scene {
   constructor() {
     super();
+
+    this.stage = new LevelMap();
   }
 
   update(time, context, camera) {
@@ -10,10 +13,6 @@ export class BattleScene extends Scene {
   }
 
   draw(context, camera) {
-    // Add your main draw calls here
-  }
-
-  cleanUp() {
-    // Can be used to clean
+    this.stage.draw(context, camera);
   }
 }
