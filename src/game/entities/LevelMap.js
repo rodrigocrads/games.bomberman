@@ -32,6 +32,6 @@ export class LevelMap extends Scene {
 
   draw(context, camera) {
     // Add your main draw calls here
-    context.drawImage(this.stageImage, 0, 0);
+    context.drawImage(this.stageImage, -camera.position.x, -camera.position.y);
   }
 }
