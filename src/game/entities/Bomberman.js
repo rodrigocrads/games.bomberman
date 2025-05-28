@@ -3,6 +3,7 @@ import { drawFrameOrigin } from 'engine/context.js';
 import { Entity } from 'engine/Entity.js';
 import * as control from 'engine/inputHandler.js';
 import { animations, BombermanStateType, frames, WALK_SPEED } from 'game/constants/bomberman.js';
+import { Control } from 'game/constants/controls.js';
 import { CounterDirectionsLookup, Direction, MovementLookup } from 'game/constants/entities.js';
 import { FRAME_TIME, HALF_TILE_SIZE, TILE_SIZE } from 'game/constants/game.js';
 import { isZero } from 'game/utils/utils.js';
@@ -14,9 +15,11 @@ export class Bomberman extends Entity {
   baseSpeedTime = WALK_SPEED;
   speedMultiplier = 1.2;
   animation = animations.moveAnimations[this.direction];
-  collisionMap = [...collisionMap];
 
-  constructor(position, time) {
+  bombAmount = 1;
+  availableBombs = this.bombAmount;
+
+  constructor(position, time, stageCollisionMap, onBombPlaced) {
     super({ x: (position.x * TILE_SIZE) + HALF_TILE_SIZE, y: (position.y * TILE_SIZE) + HALF_TILE_SIZE });
 
     this.states = {
@@ -31,6 +34,10 @@ export class Bomberman extends Entity {
         update: this.handleMovingState,
       }
     };
+
+    this.onBombPlaced = onBombPlaced;
+
+    this.collisionMap = stageCollisionMap;
 
     this.changeState(BombermanStateType.IDLE, time);
   }
@@ -122,8 +129,11 @@ export class Bomberman extends Entity {
     this.animationFrame = 1;
   };
 
-  handleGeneralState = () => {
+  handleGeneralState = (time) => {
     const [direction, velocity] = this.getMovement();
+    if (control.isControlPressed(this.id, Control.ACTION)) {
+      this.handleBombPlacement(time);
+    }
     this.animation = animations.moveAnimations[direction];
     this.direction = direction;
 
@@ -131,16 +141,31 @@ export class Bomberman extends Entity {
   };
 
   handleIdleState = (time) => {
-    const velocity = this.handleGeneralState();
+    const velocity = this.handleGeneralState(time);
     if (isZero(velocity)) return;
     this.changeState(BombermanStateType.MOVING, time);
   };
 
   handleMovingState = (time) => {
-    this.velocity = this.handleGeneralState();
+    this.velocity = this.handleGeneralState(time);
     if (!isZero(this.velocity)) return;
     this.changeState(BombermanStateType.IDLE, time);
   };
+
+  handleBombPlacement(time) {
+    if (this.availableBombs <= 0) return;
+
+    const playerCell = {
+      row: Math.floor(this.position.y / TILE_SIZE),
+      column: Math.floor(this.position.x / TILE_SIZE),
+    };
+
+    if (this.collisionMap[playerCell.row][playerCell.column] !== CollisionTile.EMPTY) return;
+
+    this.availableBombs -= 1;
+
+    this.onBombPlaced(playerCell, time);
+  }
 
   updatePosition(time) {
     this.position.x += (this.velocity.x * this.baseSpeedTime * this.speedMultiplier) * time.secondsPassed;
