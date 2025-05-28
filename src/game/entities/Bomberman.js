@@ -104,9 +104,10 @@ export class Bomberman extends Entity {
   changeState(newState, time) {
     this.currentState = this.states[newState];
     this.animationFrame = 0;
-    this.animationTimer = time.previous + this.animation[this.animationFrame] * FRAME_TIME;
 
     this.currentState.init(time);
+
+    this.animationTimer = time.previous + this.animation[this.animationFrame][1] * FRAME_TIME;
   }
 
   getCollisionTile(tile) {
@@ -146,8 +147,19 @@ export class Bomberman extends Entity {
     this.position.y += (this.velocity.y * this.baseSpeedTime * this.speedMultiplier) * time.secondsPassed;
   }
 
+  updateConstraints() {
+    if (this.position.x < 0) this.position.x = 0;
+    if (this.position.y < 0) this.position.y = 0;
+    if (this.position.x > (collisionMap[0].length - 1) * TILE_SIZE) {
+      this.position.x = (collisionMap[0].length - 1) * TILE_SIZE;
+    }
+    if (this.position.y > (collisionMap.length - 1) * TILE_SIZE) {
+      this.position.y = (collisionMap.length - 1) * TILE_SIZE;
+    }
+  }
+
   updateAnimation(time) {
-    if (time.previous < this.animationTimer || isZero(this.velocity)) return;
+    if (time.previous < this.animationTimer || this.currentState.type === BombermanStateType.IDLE) return;
     this.animationFrame += 1;
     if (this.animationFrame >= this.animation.length) {
       this.animationFrame = 0;
@@ -157,6 +169,7 @@ export class Bomberman extends Entity {
 
   update(time) {
     this.updatePosition(time);
+    this.updateConstraints();
     this.currentState.update(time);
     this.updateAnimation(time);
   }
