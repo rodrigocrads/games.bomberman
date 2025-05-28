@@ -89,7 +89,7 @@ export class Bomberman extends Entity {
   }
 
   updateAnimation(time) {
-    if (time.previous < this.animationTimer) return;
+    if (time.previous < this.animationTimer || isZero(this.velocity)) return;
     this.animationFrame += 1;
     if (this.animationFrame >= this.animation.length) {
       this.animationFrame = 0;
