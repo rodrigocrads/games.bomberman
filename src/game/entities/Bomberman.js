@@ -18,6 +18,7 @@ export class Bomberman extends Entity {
 
   bombAmount = 1;
   availableBombs = this.bombAmount;
+  lastBombCell = undefined;
 
   constructor(position, time, stageCollisionMap, onBombPlaced) {
     super({ x: (position.x * TILE_SIZE) + HALF_TILE_SIZE, y: (position.y * TILE_SIZE) + HALF_TILE_SIZE });
@@ -118,6 +119,11 @@ export class Bomberman extends Entity {
   }
 
   getCollisionTile(tile) {
+    if (
+      this.lastBombCell && tile.row === this.lastBombCell.row
+      && tile.column === this.lastBombCell.column
+    ) return CollisionTile.EMPTY;
+
     return this.collisionMap[tile.row][tile.column];
   }
 
@@ -163,8 +169,15 @@ export class Bomberman extends Entity {
     if (this.collisionMap[playerCell.row][playerCell.column] !== CollisionTile.EMPTY) return;
 
     this.availableBombs -= 1;
+    this.lastBombCell = playerCell;
 
-    this.onBombPlaced(playerCell, time);
+    this.onBombPlaced(playerCell, time, this.handleBombExploded);
+  }
+
+  handleBombExploded = () => {
+    if (this.availableBombs < this.bombAmount) {
+      this.availableBombs += 1;
+    }
   }
 
   updatePosition(time) {
@@ -194,9 +207,26 @@ export class Bomberman extends Entity {
 
   update(time) {
     this.updatePosition(time);
-    this.updateConstraints();
+    //this.updateConstraints();
     this.currentState.update(time);
     this.updateAnimation(time);
+    this.resetLastBombCell();
+  }
+
+  resetLastBombCell() {
+    if (!this.lastBombCell) return;
+
+    const playerCell = {
+      row: Math.floor(this.position.y / TILE_SIZE),
+      column: Math.floor(this.position.x / TILE_SIZE),
+    };
+    console.log(this.collisionMap[this.lastBombCell.row][this.lastBombCell.column] === CollisionTile.BOMB);
+    if (
+      playerCell.row === this.lastBombCell.row && playerCell.column === this.lastBombCell.column
+      //|| this.collisionMap[this.lastBombCell.row][this.lastBombCell.column] === CollisionTile.BOMB
+    ) return;
+
+    this.lastBombCell = undefined;
   }
 
   draw(context, camera) {
