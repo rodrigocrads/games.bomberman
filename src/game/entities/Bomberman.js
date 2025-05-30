@@ -34,11 +34,16 @@ export class Bomberman extends Entity {
         type: BombermanStateType.MOVING,
         init: this.handleMovingInit,
         update: this.handleMovingState,
+      },
+      [BombermanStateType.DEATH]: {
+        type: BombermanStateType.DEATH,
+        init: this.handleDeathInit,
+        update: this.handleDeathState,
       }
     };
 
+    this.startPosition = { ...this.position };
     this.onBombPlaced = onBombPlaced;
-
     this.collisionMap = stageCollisionMap;
 
     this.changeState(BombermanStateType.IDLE, time);
@@ -113,10 +118,16 @@ export class Bomberman extends Entity {
   changeState(newState, time) {
     this.currentState = this.states[newState];
     this.animationFrame = 0;
-
     this.currentState.init(time);
-
     this.animationTimer = time.previous + this.animation[this.animationFrame][1] * FRAME_TIME;
+  }
+
+  reset(time) {
+    this.animationFrame = 0;
+    this.direction = Direction.DOWN;
+    this.position = { ...this.startPosition };
+    this.velocity = { x: 0, y: 0 };
+    this.changeState(BombermanStateType.IDLE, time);
   }
 
   getCollisionTile(tile) {
@@ -135,6 +146,11 @@ export class Bomberman extends Entity {
   handleMovingInit = () => {
     this.animationFrame = 1;
   };
+
+  handleDeathInit = () => {
+    this.velocity = { x: 0, y: 0 };
+    this.animation = animations.deathAnimation;
+  }
 
   handleGeneralState = (time) => {
     const [direction, velocity] = this.getMovement();
@@ -158,6 +174,12 @@ export class Bomberman extends Entity {
     if (!isZero(this.velocity)) return;
     this.changeState(BombermanStateType.IDLE, time);
   };
+
+  handleDeathState = (time) => {
+    if (this.animationFrame >= animations.deathAnimation.length - 1) {
+      this.reset(time);
+    }
+  }
 
   handleBombPlacement(time) {
     if (this.availableBombs <= 0) return;
@@ -206,22 +228,35 @@ export class Bomberman extends Entity {
     this.animationTimer = time.previous + (this.animation[this.animationFrame][1] * FRAME_TIME);
   }
 
-  update(time) {
-    this.updatePosition(time);
-    //this.updateConstraints();
-    this.currentState.update(time);
-    this.updateAnimation(time);
-    this.resetLastBombCell();
+  checkFlameTileCollision(playerCell, time) {
+    console.log(this.getCollisionTile(playerCell));
+    if (
+      this.getCollisionTile(playerCell) !== CollisionTile.FLAME
+      || this.currentState.type === BombermanStateType.DEATH
+    ) return;
+    this.changeState(BombermanStateType.DEATH, time);
   }
 
-  resetLastBombCell() {
-    if (!this.lastBombCell) return;
-
+  updateCellUnderneath(time) {
     const playerCell = {
       row: Math.floor(this.position.y / TILE_SIZE),
       column: Math.floor(this.position.x / TILE_SIZE),
     };
-    console.log(this.collisionMap[this.lastBombCell.row][this.lastBombCell.column] === CollisionTile.BOMB);
+
+    this.resetLastBombCell(playerCell);
+    this.checkFlameTileCollision(playerCell, time);
+  }
+
+  update(time) {
+    this.updatePosition(time);
+    this.currentState.update(time);
+    this.updateAnimation(time);
+    this.updateCellUnderneath(time);
+  }
+
+  resetLastBombCell(playerCell) {
+    if (!this.lastBombCell) return;
+
     if (
       playerCell.row === this.lastBombCell.row && playerCell.column === this.lastBombCell.column
       //|| this.collisionMap[this.lastBombCell.row][this.lastBombCell.column] === CollisionTile.BOMB
