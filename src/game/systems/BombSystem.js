@@ -1,6 +1,6 @@
 import { CollisionTile } from 'engine/constants/LevelData.js';
 import { Entity } from 'engine/Entity.js';
-import { FlameDirectionLookup } from 'game/constants/bombs.js';
+import { BOMB_EXPLODE_DELAY, FlameDirectionLookup } from 'game/constants/bombs.js';
 import { Bomb } from 'game/entities/Bomb.js';
 import { BomExplosion } from 'game/entities/BombExplosion.js';
 
@@ -27,19 +27,33 @@ export class BombSystem {
       });
     }
 
-    return flameCells;
+    return { cells: flameCells, endCell: cell };
   }
 
   getFlameCells(startCell, length, time) {
     const flameCells = [];
     for (const [rowOffset, columnOffset] of FlameDirectionLookup) {
-      const cells = this.getFlameCellsFor(rowOffset, columnOffset, startCell, length);
+      const { cells, endCell } = this.getFlameCellsFor(rowOffset, columnOffset, startCell, length);
+      this.handleEndResult(endCell, time);
 
       if (cells.length > 0) {
         flameCells.push(...cells);
       }
     }
     return flameCells;
+  }
+
+  handleEndResult(endCell, time) {
+    const endResult = this.collisionMap[endCell.row][endCell.column];
+    switch (endResult) {
+      case CollisionTile.BOMB: {
+        const bombToExplode = this.bombs.find((bomb) =>
+          endCell.row === bomb.cell.row && endCell.column === bomb.cell.column
+        );
+        if (!bombToExplode) return;
+        bombToExplode.fuseTimer = time.previous + BOMB_EXPLODE_DELAY;
+      }
+    }
   }
 
   handleBombExploded = (bomb, strength, time) => {
