@@ -229,7 +229,6 @@ export class Bomberman extends Entity {
   }
 
   checkFlameTileCollision(playerCell, time) {
-    console.log(this.getCollisionTile(playerCell));
     if (
       this.getCollisionTile(playerCell) !== CollisionTile.FLAME
       || this.currentState.type === BombermanStateType.DEATH
