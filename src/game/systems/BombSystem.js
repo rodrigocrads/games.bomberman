@@ -1,5 +1,4 @@
 import { CollisionTile } from 'engine/constants/LevelData.js';
-import { Entity } from 'engine/Entity.js';
 import { BOMB_EXPLODE_DELAY, FlameDirectionLookup } from 'game/constants/bombs.js';
 import { Bomb } from 'game/entities/Bomb.js';
 import { BomExplosion } from 'game/entities/BombExplosion.js';
@@ -7,7 +6,8 @@ import { BomExplosion } from 'game/entities/BombExplosion.js';
 export class BombSystem {
   bombs = [];
 
-  constructor(stageCollisionMap) {
+  constructor(stageCollisionMap, onBlockDestroyed) {
+    this.onBlockDestroyed = onBlockDestroyed;
     this.collisionMap = stageCollisionMap;
   }
 
@@ -46,12 +46,16 @@ export class BombSystem {
   handleEndResult(endCell, time) {
     const endResult = this.collisionMap[endCell.row][endCell.column];
     switch (endResult) {
+      case CollisionTile.BLOCK:
+        this.onBlockDestroyed(endCell, time);
+        break;
       case CollisionTile.BOMB: {
         const bombToExplode = this.bombs.find((bomb) =>
           endCell.row === bomb.cell.row && endCell.column === bomb.cell.column
         );
         if (!bombToExplode) return;
         bombToExplode.fuseTimer = time.previous + BOMB_EXPLODE_DELAY;
+        break;
       }
     }
   }
