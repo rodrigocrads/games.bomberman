@@ -1,29 +1,26 @@
 import {
-  collisionMap,
-  CollisionTile,
-  MapTile,
-  MapToCollisionTileLookup,
-  MAX_BLOCKS,
-  playersStartCoords,
   STAGE_MAP_MAX_SIZE,
-  tileMap
+  CollisionTile,
+  MapToCollisionTileLookup,
+  stageData,
 } from 'engine/constants/LevelData.js';
 import { drawTile } from 'engine/context.js';
 import { Entity } from 'engine/Entity.js';
 import { TILE_SIZE } from 'game/constants/game.js';
 
 export class Stage extends Entity {
-  tileMap = [...tileMap];
-  collisionMap = [...collisionMap];
+  tileMap = structuredClone(stageData.tiles);
+  collisionMap = stageData.tiles.map(row => row.map(tile => MapToCollisionTileLookup[tile]));
 
   image = document.querySelector('img#stage');
   stageImage = new OffscreenCanvas(STAGE_MAP_MAX_SIZE, STAGE_MAP_MAX_SIZE);
-  stageImageContext = this.stageImage.getContext('2d');
 
   constructor() {
     super({ x: 0, y: 0 });
 
-    this.buildStage();
+    this.stageImageContext = this.stageImage.getContext('2d');
+
+    this.buildStageMap();
   }
 
   getCollisionTileAt = (cell) => {
@@ -37,34 +34,6 @@ export class Stage extends Entity {
         this.updateMapAt({ row: rowIndex, column: colIndex }, tile);
       }
     }
-  }
-
-  addBlockTileAt(cell) {
-    const isStartZone = playersStartCoords.some(([startRow, startCol]) => {
-      return startRow === cell.row && startCol === cell.column;
-    });
-
-    if (isStartZone || this.collisionMap[cell.row][cell.column] !== CollisionTile.EMPTY) return false;
-
-    this.updateMapAt(cell, MapTile.BLOCK);
-
-    return true;
-  }
-
-  addBlocks() {
-    const blocks = [];
-    while (blocks.length < MAX_BLOCKS) {
-      const cell = {
-        row: 1 + Math.floor(Math.random() * (this.tileMap.length - 3)),
-        column: 2 + Math.floor(Math.random() * (this.tileMap[0].length - 4)),
-      };
-      if (this.addBlockTileAt(cell)) blocks.push(cell);
-    }
-  }
-
-  buildStage() {
-    this.buildStageMap();
-    this.addBlocks();
   }
 
   updateMapAt = (cell, tile) => {

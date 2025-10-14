@@ -1,7 +1,6 @@
 import { TILE_SIZE } from "game/constants/game.js";
 
 export const STAGE_MAP_MAX_SIZE = 64 * TILE_SIZE;
-export const MAX_BLOCKS = 50;
 
 export const playersStartCoords = [
   [1, 2], [2, 2], [1, 3],
@@ -28,40 +27,44 @@ export const CollisionTile = {
 
 export const MapToCollisionTileLookup = {
   [MapTile.FLOOR]: CollisionTile.EMPTY,
+  [MapTile.OUTER_WALL]: CollisionTile.WALL,
   [MapTile.WALL]: CollisionTile.WALL,
   [MapTile.BLOCK]: CollisionTile.BLOCK
 };
 
-export const tileMap = [
-  [29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29],
-  [29, 30, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 30, 29],
-  [29, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 29],
-  [29, 30, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 30, 29],
-  [29, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 29],
-  [29, 30, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 30, 29],
-  [29, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 29],
-  [29, 30, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 30, 29],
-  [29, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 29],
-  [29, 30, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 30, 29],
-  [29, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 29],
-  [29, 30, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 30, 29],
-  [29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29],
-  [29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29],
-];
+export const stageData = {
+  maxBlocks: 50,
+  tiles: [
+    [29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29],
+    [29, 30, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 30, 29],
+    [29, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 29],
+    [29, 30, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 30, 29],
+    [29, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 29],
+    [29, 30, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 30, 29],
+    [29, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 29],
+    [29, 30, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 30, 29],
+    [29, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 29],
+    [29, 30, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 30, 29],
+    [29, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 59, 30, 29],
+    [29, 30, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 30, 29],
+    [29, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29],
+    [29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29],
+  ],
+}
 
-export const collisionMap = [
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL],
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL],
-  [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL],
-];
+// export const collisionMap = [
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL],
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.EMPTY, CollisionTile.WALL, CollisionTile.WALL],
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL],
+//   [CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL, CollisionTile.WALL],
+// ];
